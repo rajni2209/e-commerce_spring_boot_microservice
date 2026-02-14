@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/rajni2209/e-commerce_config_server
+          clone-on-start: true
+server:
+  port: 8888
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+
+

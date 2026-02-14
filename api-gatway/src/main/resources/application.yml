@@ -1,0 +1,10 @@
+security:
+  jwt:
+    secret: my-super-secret-key-my-super-secret-key
+
+spring:
+  config:
+    import: optional:configserver:http://localhost:8888
+
+  application:
+    name: api-gatway
