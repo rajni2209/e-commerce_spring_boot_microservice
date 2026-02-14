@@ -1,346 +1,474 @@
 # 🛒 E-Commerce Microservices System
 
-A production-grade **Event-Driven E-Commerce Backend System** built using Spring Boot Microservices architecture with Kafka, Outbox Pattern, Inbox Pattern, Saga Pattern, and Idempotency.
+<p align="center">
+  <b>Scalable • Event-Driven • Distributed • Production-Grade</b>
+</p>
+
+## 📌 Overview
+
+A scalable, production-grade microservices architecture built with Spring Boot and event-driven communication for distributed transaction handling.
+
+Designed to model how real-world e-commerce platforms manage high-throughput traffic, fault tolerance, and eventual consistency in a distributed environment.
 
 ---
 
-# 📌 Project Overview
+## 🏗️ Architecture Overview
 
-This project simulates a real-world distributed e-commerce backend system where:
+> This architecture reflects how large-scale distributed systems operate in production.
 
-- Order creation triggers distributed processing
-- Payment and Inventory services work independently
-- Events are communicated using Apache Kafka
-- Data consistency is maintained using Saga Pattern
-- Reliability is ensured using Outbox & Inbox patterns
-- Duplicate event processing is prevented using Idempotency
+## ⚙️ Core Architectural Principles
 
-This architecture reflects how large-scale distributed systems operate in production.
+- **Microservices Architecture** (database-per-service pattern)  
+- **Event-Driven Communication** via Apache Kafka  
+- **Distributed Transactions** using Saga (Choreography)  
+- **Service Discovery** with Netflix Eureka  
+- **API Gateway** for centralized routing & security  
+- **JWT-based Authentication & Authorization**  
+- **Search Service** powered by Elasticsearch with Redis support  
+- **Hybrid Communication** (Async via Kafka + Sync REST where required)  
+
+---
+## 🛠 Architecture & Tech Stack
+This project is a distributed, event-driven e-commerce backend system built using:
+
+### 🏗 Architectural Style
+- Microservices Architecture  
+- Event-Driven Architecture  
+
+### 🚀 Core Technologies
+- Spring Boot  
+- Apache Kafka  
+- MySQL  
+- Redis  
+- Elasticsearch  
+- JPA / Hibernate  
+- OpenFeign  
+
+### 🔁 Distributed System Patterns
+- Saga Pattern (Orchestration)  
+- Outbox Pattern  
+- Inbox Pattern  
+- Idempotent Processing  
+
 
 ---
 
-# 🏗️ Architecture
+## 🎯 What This Project Actually Solves
 
-## Services
+This is **not just an order system** — it addresses real-world distributed system challenges:
 
-1. **Order Service** (Saga Orchestrator)
-2. **Payment Service**
-3. **Inventory Service**
-4. **Cart Service (Redis)**
-5. **Apache Kafka**
-6. **MySQL (Database per service)**
-
----
-
-# 🔁 Order Processing Flow
-
-1. User creates order.
-2. Order Service:
-   - Saves order in DB.
-   - Inserts `OrderCreatedEvent` into Outbox table.
-3. Outbox Publisher sends event to Kafka.
-4. Payment Service consumes event → processes payment.
-5. Inventory Service consumes event → reserves stock.
-6. Both services publish result events.
-7. Order Service consumes:
-   - `PaymentCompletedEvent`
-   - `InventoryReservedEvent`
-8. If both succeed → Order CONFIRMED.
-9. If any fails → Order CANCELLED.
+- ✔ Distributed transaction management  
+- ✔ Event-driven consistency  
+- ✔ Idempotent processing  
+- ✔ Reliable event publishing  
+- ✔ Duplicate message handling  
+- ✔ Order orchestration  
+- ✔ Data integrity across services  
+- ✔ Eventually consistent architecture
+- ✔ Fault tolerance with Resilience4j (Circuit Breaker, Retry, Rate Limiter)
 
 ---
 
-# 🧠 Design Patterns Implemented
+## 🧩 Services & Responsibilities
 
-## 1️⃣ Saga Pattern (Choreography)
-
-There is no distributed transaction.  
-Each service performs a local transaction and emits an event.
-
-Services react to events independently.
+- **API Gateway** → Centralized request routing  
+- **Auth Service** → JWT authentication management  
+- **Cart Service** → User cart management  
+- **Config Server** → Centralized configuration management  
+- **Inventory Service** → Stock reservation handling  
+- **Order Service** → Order lifecycle orchestration  
+- **Payment Service** → Payment transaction processing  
+- **Product Service** → Product catalog management  
+- **Profile Service** → User profile management  
+- **Search Service** → Product search indexing  
+- **Server Registry** → Service discovery management  
 
 ---
 
-## 2️⃣ Outbox Pattern
+# 🌐 Service Ports
 
-Ensures reliable event publishing.
+| Service | Port |
+|----------|------|
+| API Gateway | 8080 |
+| Eureka Server | 8761 |
+| Config Server | 8888 |
+| Auth Service | 9001 |
+| Product Service | 9002 |
+| Cart Service | 9003 |
+| Inventory Service | 9004 |
+| Payment Service | 9006 |
+| Profile Service | 9007 |
+| Search Service | 9008 |
+| Order Service | 9096 |
+| Kafka | 9092 |
 
-### Outbox Table Structure
+---
+
+# 🚀 Getting Started
+
+
+Before running the system, make sure you complete the following setup.
+
+---
+
+# 0️⃣ Config Server Repository Setup (IMPORTANT)
+
+This project uses a centralized configuration repository.
+
+The Config Server fetches configuration from this Git repository:
+
+https://github.com/rajni2209/e-commerce_config_server
+
+## 🔹 What You Need To Do
+
+1. Fork or clone the repository:
+
+```bash
+git clone https://github.com/rajni2209/e-commerce_config_server.git
+```
+
+2. Create your own GitHub repository.
+3. Push this config project to your own repository.
+4. Update the `spring.cloud.config.server.git.uri` property
+   inside your Config Server `application.yml` to point to your repo.
+
+Example:
+
+```yaml
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/your-username/your-config-repo
+```
+
+⚠️ Make sure this is configured before starting microservices.
+
+---
+
+
+## 1️⃣ Start Infrastructure (Manual Setup)
+
+This project does NOT use Docker.
+
+Make sure the following services are installed and running locally before starting the microservices.
+
+---
+
+### 📨 Kafka
+
+Start Kafka broker:
+
+```bash
+kafka-server-start.sh config/server.properties
+```
+
+Default:
+```
+localhost:9092
+```
+
+---
+
+### 🧠 Redis
+
+Start Redis server:
+
+```bash
+redis-server
+```
+
+Verify Redis is running:
+
+```bash
+redis-cli ping
+```
+
+Expected response:
+
+```
+PONG
+```
+
+Default:
+```
+localhost:6379
+```
+
+---
+
+### 🗄️ MySQL
+The following databases must already exist:
+
+- e_commerce                → Auth Service
+- e_commerce_productservice → Product Service
+- e_commerce_orderservice   → Order Service
+- e_commerce_paymentservice → Payment Service
+- e_commerce_inventoryservice → Inventory Service
+- e_commerce_profile        → Profile Service
+
+If needed, create them manually:
 
 ```sql
-CREATE TABLE outbox_events (
-    event_id VARCHAR(255) PRIMARY KEY,
-    aggregated_id BIGINT,
-    event_type VARCHAR(255),
-    pay_load TEXT,
-    status VARCHAR(50),
-    topic VARCHAR(255),
-    attempts INT,
-    created_at TIMESTAMP,
-    sent_at TIMESTAMP
-);
+CREATE DATABASE e_commerce;
+CREATE DATABASE e_commerce_productservice;
+CREATE DATABASE e_commerce_orderservice;
+CREATE DATABASE e_commerce_paymentservice;
+CREATE DATABASE e_commerce_inventoryservice;
+CREATE DATABASE e_commerce_profile;
 ```
 
-Events are:
-- Stored in DB
-- Published asynchronously
-- Marked as SENT after successful Kafka publish
+Default MySQL Port:
+```
+3306
+```
+
+Update your credentials according to your local MySQL setup.
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/<your_database_name>?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: <your_mysql_username>
+    password: <your_mysql_password>
+    driver-class-name: com.mysql.cj.jdbc.Driver
+```
+⚠️ Replace:
+
+- `<your_database_name>` with the appropriate service database
+- `<your_mysql_username>` with your MySQL username
+- `<your_mysql_password>` with your MySQL password
 
 ---
 
-## 3️⃣ Inbox Pattern
+## 2️⃣ Start Services (Order Matters)
 
-Prevents duplicate event processing.
+1. Config Server (8888)
+2. Eureka Server (8761)
+3. API Gateway (8080)
+4. All Microservices
 
-### Inbox Table Structure
-
-```sql
-CREATE TABLE inbox_events (
-    event_id VARCHAR(255) PRIMARY KEY,
-    event_type VARCHAR(255),
-    received_at TIMESTAMP
-);
-```
-
-Before processing an event:
-
-```java
-boolean isNew = inboxService.markReceivedIfNew(eventId, eventType);
-if (!isNew) return;
+```bash
+mvn clean install
+mvn spring-boot:run
 ```
 
 ---
 
-## 4️⃣ Idempotency
 
-Implemented at multiple levels:
+# 🔥 Complete System Flow
 
-| Layer | Protection |
-|-------|------------|
-| Producer | Kafka idempotent producer |
-| Consumer | Inbox table |
-| Payment Service | Prevent duplicate payment |
-| Database | Unique constraints |
+```mermaid
+flowchart TB
+
+    A[User: Register → Login] --> B[Browse / Search]
+    B --> C[Add to Cart]
+    C --> D[Place Order]
+
+    D --> E[OrderCreatedEvent]
+
+    E --> F[Payment Service]
+    E --> G[Inventory Service]
+
+    F --> H[Payment Completed]
+    G --> I[Inventory Reserved]
+
+    H --> J[Order Confirmed]
+    I --> J
+
+    J --> K[Cart Cleared]
+```
 
 ---
 
-# 📦 Event Structure
+# 🔐 Authentication Flow
 
-All services use a common event wrapper:
+## STEP 1 — Register
 
-```java
-public class EventEnvelope<T> {
-    private String eventId;
-    private String eventType;
-    private Long aggregatedId;
-    private Instant occurTime;
-    private Integer version;
-    private T payload;
+POST http://localhost:8080/auth/register
+
+```json
+{
+  "username": "rajni",
+  "email": "rajni@gmail.com",
+  "password": "Password@123"
 }
 ```
 
-This ensures:
-- Standardized event format
-- Version control
-- Traceability
-- Extensibility
+✔ Password encoded with BCrypt  
+✔ User stored in MySQL  
 
 ---
 
-# ⚙️ Kafka Configuration
+## STEP 2 — Login
 
-## Producer Configuration
+POST http://localhost:8080/auth/login
 
-```yaml
-producer:
-  key-serializer: org.apache.kafka.common.serialization.StringSerializer
-  value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-  retries: 2147483647
-  properties:
-    acks: all
-    enable-idempotence: true
-    max-in-flight-requests-per-connection: 5
+```json
+{
+  "email": "rajni@gmail.com",
+  "password": "Password@123"
+}
 ```
 
-### Explanation
+Response:
 
-- `acks=all` → Strong durability
-- `enable-idempotence=true` → Prevent duplicate messages
-- Infinite retries → Reliable publish
-
----
-
-## Consumer Configuration
-
-```yaml
-consumer:
-  group-id: order-service-group
-  auto-offset-reset: earliest
-  enable-auto-commit: false
-  key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-  value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
 ```
 
-Manual offset control ensures safe processing.
-
----
-
-# 🧱 Database Per Service
-
-Each service has its own database:
-
-- order_db
-- payment_db
-- inventory_db
-
-This ensures:
-- Loose coupling
-- Independent scaling
-- Service isolation
-
----
-
-# 🗂️ Project Structure
+Include this header in all protected requests:
 
 ```
-ecommerce-system/
-│
-├── order-service/
-│   ├── controller/
-│   ├── entity/
-│   ├── repository/
-│   ├── service/
-│   ├── kafka/
-│   ├── config/
-│   └── events/
-│
-├── payment-service/
-│   ├── entity/
-│   ├── service/
-│   ├── kafka/
-│   └── events/
-│
-├── inventory-service/
-│   ├── entity/
-│   ├── service/
-│   ├── kafka/
-│   └── events/
-│
-├── cart-service/
-│   ├── model/
-│   ├── service/
-│   └── config/
+Authorization: Bearer <token>
 ```
 
 ---
 
-# 🚀 How to Run
+# 🛍️ User Journey
 
-## 1️⃣ Start Infrastructure
+## STEP 3 — Browse Products
 
-- Start Zookeeper
-- Start Kafka
-- Start MySQL
-- Start Redis
+GET http://localhost:8080/products
 
-## 2️⃣ Start Services (Order)
-
-1. Inventory Service
-2. Payment Service
-3. Order Service
-4. Cart Service
+Returns product list from Product Service.
 
 ---
 
-# 🧪 How to Test
+## STEP 4 — Search Products
 
-1. Add items to cart
-2. Create order
-3. Observe:
-   - Outbox entries created
-   - Kafka messages published
-   - Payment processed
-   - Inventory reserved
-   - Order confirmed
+GET http://localhost:8080/search?keyword=laptop
+
+Search Service handles query.
 
 ---
 
-# ⚠️ Failure Handling
+## STEP 5 — Add to Cart
 
-| Scenario | Behavior |
-|----------|----------|
-| Payment fails | Order cancelled |
-| Inventory fails | Order cancelled |
-| Duplicate event | Ignored via Inbox |
-| Kafka retry | Safe via idempotency |
-| Service crash | Outbox ensures retry |
+POST http://localhost:8080/cart/add
 
----
+```json
+{
+  "productId": 1,
+  "quantity": 2
+}
+```
 
-# 🔍 Observability
+Cart stored in Redis:
 
-Logs include:
+Key:
+```
+cart:userId
+```
 
-- Event received
-- Event ignored (duplicate)
-- Order status update
-- Payment result
-- Inventory reservation
+Stored format:
 
----
-
-# 🛠️ Tech Stack
-
-- Java 17+
-- Spring Boot 3
-- Spring Data JPA
-- Spring Kafka
-- MySQL
-- Redis
-- Lombok
-- Apache Kafka
+```json
+{
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 2
+    }
+  ]
+}
+```
 
 ---
 
-# 🎯 What This Project Demonstrates
+## STEP 6 — Place Order
 
-- Event-driven microservices
-- Distributed system design
-- Eventually consistent architecture
-- Reliable messaging
-- Idempotent consumers
-- Fault-tolerant services
-- Production-ready backend engineering
+POST http://localhost:8080/orders
 
----
-
-# 📌 Future Improvements
-
-- Circuit Breaker (Resilience4j)
-- Distributed Tracing (Zipkin)
-- Metrics (Prometheus + Grafana)
-- Docker & Kubernetes deployment
-- API Gateway
-- JWT Authentication
+```json
+{
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 2
+    }
+  ]
+}
+```
 
 ---
 
-# 🏁 Conclusion
+# 🔄 Distributed Saga Flow
 
-This project implements enterprise-grade distributed system patterns including:
+## Order Service
 
-- Saga Pattern
-- Outbox Pattern
-- Inbox Pattern
-- Idempotent Producers
-- Idempotent Consumers
-
-It reflects real-world backend engineering principles used in high-scale production systems.
+- Creates order
+- Sets:
+  - paymentCompleted = false
+  - inventoryReserved = false
+  - status = CREATED
+- Saves to database
+- Stores event in Outbox
+- Publishes OrderCreatedEvent
 
 ---
 
-**Author:** Rajnikant Kumar  
-**Architecture Style:** Event-Driven Microservices  
-**Consistency Model:** Eventually Consistent  
-**Communication:** Asynchronous via Kafka  
+## Kafka Event Example
+
+Topic: order-events
+
+```json
+{
+  "eventId": "uuid",
+  "eventType": "OrderCreatedEvent",
+  "aggregatedId": 12,
+  "payload": {
+    "orderId": 12,
+    "items": [...]
+  }
+}
+```
+
+---
+
+# 💳 Payment Service
+
+Consumes OrderCreatedEvent
+
+- Idempotency check
+- Creates payment record
+- Publishes PaymentCompletedEvent
+
+Topic: payment-events
+
+---
+
+# 📦 Inventory Service
+
+Consumes OrderCreatedEvent
+
+- Checks stock
+- Deducts quantity
+- Publishes InventoryReservedEvent
+
+Topic: inventory-reserved-events
+
+---
+
+# 🧱 Reliability Layer
+
+| Feature | Implemented In |
+|----------|----------------|
+| Saga Pattern | Order Service |
+| Outbox Pattern | Order, Payment, Inventory |
+| Inbox Pattern | Order, Payment, Inventory |
+| Idempotency | Payment |
+| Kafka acks=all | Producer |
+| enable-idempotence=true | Producer |
+| Resilience4j | Circuit Breaker, Retry |
+| Redis | Cart Storage |
+
+---
+
+
+
+
 
