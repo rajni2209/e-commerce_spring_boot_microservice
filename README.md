@@ -280,119 +280,6 @@ flowchart TB
     J --> K[Cart Cleared]
 ```
 
----
-
-# 🔐 Authentication Flow
-
-## STEP 1 — Register
-
-POST http://localhost:8080/auth/register
-
-```json
-{
-  "username": "rajni",
-  "email": "rajni@gmail.com",
-  "password": "Password@123"
-}
-```
-
-✔ Password encoded with BCrypt  
-✔ User stored in MySQL  
-
----
-
-## STEP 2 — Login
-
-POST http://localhost:8080/auth/login
-
-```json
-{
-  "email": "rajni@gmail.com",
-  "password": "Password@123"
-}
-```
-
-Response:
-
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
-```
-
-Include this header in all protected requests:
-
-```
-Authorization: Bearer <token>
-```
-
----
-
-# 🛍️ User Journey
-
-## STEP 3 — Browse Products
-
-GET http://localhost:8080/products
-
-Returns product list from Product Service.
-
----
-
-## STEP 4 — Search Products
-
-GET http://localhost:8080/search?keyword=laptop
-
-Search Service handles query.
-
----
-
-## STEP 5 — Add to Cart
-
-POST http://localhost:8080/cart/add
-
-```json
-{
-  "productId": 1,
-  "quantity": 2
-}
-```
-
-Cart stored in Redis:
-
-Key:
-```
-cart:userId
-```
-
-Stored format:
-
-```json
-{
-  "items": [
-    {
-      "productId": 1,
-      "quantity": 2
-    }
-  ]
-}
-```
-
----
-
-## STEP 6 — Place Order
-
-POST http://localhost:8080/orders
-
-```json
-{
-  "items": [
-    {
-      "productId": 1,
-      "quantity": 2
-    }
-  ]
-}
-```
 
 ---
 
@@ -468,7 +355,10 @@ Topic: inventory-reserved-events
 
 ---
 
-
+## 🙋‍♂️ Author
+- **Rajnikant**  
+  [GitHub Profile](https://github.com/rajni2209)<br>
+  [Linkedin Profile](https://www.linkedin.com/in/rajnikant-kumar-27bb22354/)
 
 
 
