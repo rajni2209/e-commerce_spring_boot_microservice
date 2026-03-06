@@ -355,6 +355,14 @@ Topic: inventory-reserved-events
 
 ---
 
+## 🤖 Future AI Implementation
+
+Future versions of this platform will integrate **Spring AI**, **Large Language Models (LLMs)**, and **Retrieval-Augmented Generation (RAG)** to introduce intelligent and context-aware capabilities.
+
+These technologies will enable features such as AI-powered product recommendations, semantic product search, conversational shopping assistance, and automated insights from platform data.
+
+By leveraging Spring AI and LLMs with the existing microservices architecture, the system aims to enhance user experience through smarter search, personalized suggestions, and natural language interactions.
+
 ## 🙋‍♂️ Author
 - **Rajnikant**  
   [GitHub Profile](https://github.com/rajni2209)<br>
