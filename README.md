@@ -4,11 +4,19 @@
   <b>Scalable • Event-Driven • Distributed • Production-Grade</b>
 </p>
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-ED8B00?style=flat&logo=openjdk&logoColor=white" />
+  <img src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat&logo=spring-boot&logoColor=white" />
+  <img src="https://img.shields.io/badge/Apache_Kafka-231F20?style=flat&logo=apache-kafka&logoColor=white" />
+  <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white" />
+  <img src="https://img.shields.io/badge/Redis-DC382D?style=flat&logo=redis&logoColor=white" />
+  <img src="https://img.shields.io/badge/Status-Active-brightgreen?style=flat" />
+</p>
+
 ## 📌 Overview
 
-A scalable, production-grade microservices architecture built with Spring Boot and event-driven communication for distributed transaction handling.
-
-Designed to model how real-world e-commerce platforms manage high-throughput traffic, fault tolerance, and eventual consistency in a distributed environment.
+- A production-grade, event-driven e-commerce backend built with Spring Boot microservices - handling distributed transactions, eventual consistency, and fault tolerance the way real systems do.
+- Designed to model how real-world e-commerce platforms manage high-throughput traffic, fault tolerance, and eventual consistency in a distributed environment.
 
 ---
 
@@ -355,13 +363,14 @@ Topic: inventory-reserved-events
 
 ---
 
-## 🤖 Future AI Implementation
+## 🤖 Upcoming: AI Integration (Spring AI + RAG)
 
-Future versions of this platform will integrate **Spring AI**, **Large Language Models (LLMs)**, and **Retrieval-Augmented Generation (RAG)** to introduce intelligent and context-aware capabilities.
+Currently integrating Spring AI + LLMs + RAG into the Search Service to enable:
+- **Semantic product search** — vector-based search beyond keyword matching
+- **Conversational shopping assistant** — natural language product discovery
+- **Intelligent recommendations** — context-aware suggestions based on user behaviour
 
-These technologies will enable features such as AI-powered product recommendations, semantic product search, conversational shopping assistance, and automated insights from platform data.
-
-By leveraging Spring AI and LLMs with the existing microservices architecture, the system aims to enhance user experience through smarter search, personalized suggestions, and natural language interactions.
+Tech: Spring AI · OpenAI / Ollama · Pinecone / pgvector · RAG pipeline
 
 ## 🙋‍♂️ Author
 - **Rajnikant**  
