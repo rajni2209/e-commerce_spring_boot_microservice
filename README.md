@@ -33,7 +33,8 @@
 - **API Gateway** for centralized routing & security  
 - **JWT-based Authentication & Authorization**  
 - **Search Service** powered by Elasticsearch with Redis support  
-- **Hybrid Communication** (Async via Kafka + Sync REST where required)  
+- **Hybrid Communication** (Async via Kafka + Sync REST where required)
+
 
 ---
 ## 🛠 Architecture & Tech Stack
@@ -58,6 +59,66 @@ This project is a distributed, event-driven e-commerce backend system built usin
 - Inbox Pattern  
 - Idempotent Processing  
 
+
+```mermaid
+flowchart TB
+    Client(["Client / Browser"])
+
+    subgraph Infrastructure ["Infrastructure Layer"]
+        GW["API Gateway\n:8080"]
+        CFG["Config Server\n:8888"]
+        EUR["Eureka Server\n:8761"]
+    end
+
+    subgraph Services ["Microservices"]
+        AUTH["Auth Service\n:9001"]
+        PROD["Product Service\n:9002"]
+        CART["Cart Service\n:9003"]
+        INV["Inventory Service\n:9004"]
+        PAY["Payment Service\n:9006"]
+        PROF["Profile Service\n:9007"]
+        SEARCH["Search Service\n:9008"]
+        ORDER["Order Service\n:9096"]
+    end
+
+    subgraph Messaging ["Event Bus"]
+        KAFKA[["Apache Kafka\n:9092"]]
+    end
+
+    subgraph Storage ["Data Layer"]
+        MYSQL[("MySQL")]
+        REDIS[("Redis")]
+        ES[("Elasticsearch")]
+    end
+
+    Client --> GW
+    GW --> AUTH
+    GW --> PROD
+    GW --> CART
+    GW --> ORDER
+    GW --> SEARCH
+    GW --> PROF
+
+    ORDER -->|OrderCreatedEvent| KAFKA
+    KAFKA -->|OrderCreatedEvent| PAY
+    KAFKA -->|OrderCreatedEvent| INV
+    PAY -->|PaymentCompletedEvent| KAFKA
+    INV -->|InventoryReservedEvent| KAFKA
+    KAFKA -->|OrderConfirmedEvent| ORDER
+
+    AUTH --> MYSQL
+    PROD --> MYSQL
+    ORDER --> MYSQL
+    PAY --> MYSQL
+    INV --> MYSQL
+    PROF --> MYSQL
+    CART --> REDIS
+    SEARCH --> ES
+
+    CFG -.->|config| Services
+    EUR -.->|discovery| Services
+```
+  
 
 ---
 
@@ -378,4 +439,4 @@ Tech: Spring AI · OpenAI / Ollama · Pinecone / pgvector · RAG pipeline
   [Linkedin Profile](https://www.linkedin.com/in/rajnikant-kumar-27bb22354/)
 
 
-
+---
